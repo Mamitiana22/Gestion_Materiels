@@ -1,35 +1,31 @@
 <?php
 
 namespace config;
+
 use PDO;
 
 class Connexion
 {
-    // Les propriétées de connexion à la base de données
-    private $host = "localhost";
-    private $dbname = "materials_management";
-    private $username = "root";
-    private $password = "";
+    public string $host = '127.0.0.1';
+    public string $dbname = 'materials_management';
+    public string $username = 'root';
+    public string $password = '';
+
+    public function __construct()
+    {
+    }
 
     // Connexion à la base de données
     public function getConnexion()
     {
         $conn = null;
-
         try {
-            $conn = new PDO(
-                "mysql:host=$this->host;dbname=$this->dbname;charset=utf8",
-                $this->username,
-                $this->password,
-                [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-                ]
-            );
+            $conn = new PDO("mysql:host=$this->host;dbname=$this->dbname", $this->username, $this->password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
         } catch (\PDOException  $e) {
             echo "Erreur de connexion : " . $e->getMessage();
         }
-
         return $conn;
     }
 }

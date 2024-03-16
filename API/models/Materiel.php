@@ -22,7 +22,7 @@ class Materiel
     }
 
     public function listMateriel(){
-        $sql = "SELECT numMateriel, design, etat,quantite FROM $this->table";
+        $sql = "SELECT * FROM $this->table";
         return $this->connexion->query($sql);
     }
     public function add(){
