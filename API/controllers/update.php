@@ -4,12 +4,15 @@ header("Access-Control-Allow-Origin: *");
 header("Content-type: application/json; charset= UTF-8");
 header("Access-Control-Allow-Methods: PUT");
 
+require_once("../config/Connexion.php");
+require_once("../models/Materiel.php");
+
 use config\Connexion;
 use models\Materiel;
 
 if ($_SERVER['REQUEST_METHOD'] === "PUT") {
     // On instancie la base de données
-    $database = new connexion();
+    $database = new Connexion();
     $db = $database->getConnexion();
 
     // On instancie l'objet etudiant

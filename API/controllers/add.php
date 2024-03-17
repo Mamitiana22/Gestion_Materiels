@@ -20,10 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     // On récupère les infos envoyées
     //$data = json_decode(file_get_contents("php://input"));
-
-    $design = $_POST['design'];
+    $design = isset($_POST['design']) ? $_POST['design'] : null;
+    $etat = isset($_POST['etat']) ? $_POST['etat'] : null;
+    $quantite = isset($_POST['quantite']) ? $_POST['quantite'] : null;
+    
+    /*$design = $_POST['design'];
     $etat = $_POST['etat'];
-    $quantite = $_POST['quantite'];
+    $quantite = $_POST['quantite'];*/
 
     if (!empty($design) && !empty($etat) && !empty($quantite)) {
         // On hydrate l'objet materiel

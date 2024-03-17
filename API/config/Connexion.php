@@ -9,7 +9,7 @@ class Connexion
     public string $host = '127.0.0.1';
     public string $dbname = 'materials_management';
     public string $username = 'root';
-    public string $password = '';
+    public string $password = '1234';
 
     public function __construct()
     {

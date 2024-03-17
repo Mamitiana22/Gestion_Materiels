@@ -1,6 +1,7 @@
 <?php
 
 namespace models;
+use PDO;
 
 // Toutes les méthodes et propriétés nécessaires à la gestion des données de la table materiel
 class Materiel
@@ -23,8 +24,14 @@ class Materiel
 
     public function listMateriel(){
         $sql = "SELECT * FROM $this->table";
-        return $this->connexion->query($sql);
+        $statement = $this->connexion->query($sql);
+        $result = [];
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = $row;
+        }
+        return $result;
     }
+    
     public function add(){
         $sql = "INSERT INTO $this->table(design,etat,quantite)VALUES(:design,:etat,:quantite)";
 
@@ -54,4 +61,62 @@ class Materiel
         $sql = "SELECT numMateriel, design, etat,quantite FROM $this->table WHERE numMateriel=:numMateriel";
         return $this->connexion->query($sql);
     }
+
+    // Fonction pour calculer la quantité totale et les états du matériel
+    public function calcul()
+    {
+        $totalQuantite = 0;
+        $bon = 0;
+        $mauvais = 0;
+        $abime = 0;
+
+        $sql = "SELECT quantite, etat FROM $this->table";
+        $statement = $this->connexion->query($sql);
+
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $totalQuantite += $row['quantite'];
+
+            switch ($row['etat']) {
+                case 'BON':
+                    $bon += $row['quantite'];
+                    break;
+                case 'MAUVAIS':
+                    $mauvais += $row['quantite'];
+                    break;
+                case 'ABIME':
+                    $abime += $row['quantite'];
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return [
+            "totalQuantite" => $totalQuantite,
+            "bon" => $bon,
+            "mauvais" => $mauvais,
+            "abime" => $abime
+        ];
+    }
+
+    //Fonction recherche
+    public function recherche($keyword, $etat = null)
+{
+    $sql = "SELECT * FROM $this->table WHERE design LIKE :keyword";
+    $params = [':keyword' => "%$keyword%"];
+
+    if ($etat !== null) {
+        $sql .= " AND etat = :etat";
+        $params[':etat'] = $etat;
+    }
+
+    $statement = $this->connexion->prepare($sql);
+    $statement->execute($params);
+    
+    $result = [];
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $result[] = $row;
+    }
+    return $result;
+}
 }
